@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { papersApi } from '../../api/papers'
-import { useAuthStore } from '../../store/auth'
+import { papersApi } from '../api/papers'
+import { useAuthStore } from '../store/auth'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 

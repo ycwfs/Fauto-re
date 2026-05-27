@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { authApi } from '../../api/auth'
-import { useAuthStore } from '../../store/auth'
+import { authApi } from '../api/auth'
+import { useAuthStore } from '../store/auth'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((state) => state.setAuth)
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
     password: '',
     confirmPassword: '',
     full_name: '',
@@ -39,9 +38,8 @@ export default function RegisterPage() {
     try {
       await authApi.register({
         email: formData.email,
-        username: formData.username,
         password: formData.password,
-        full_name: formData.full_name || undefined,
+        full_name: formData.full_name,
       })
 
       // Auto-login after registration
@@ -87,28 +85,14 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Username *
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              minLength={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              Full Name *
             </label>
             <input
               type="text"
               name="full_name"
               value={formData.full_name}
               onChange={handleChange}
+              required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
