@@ -40,7 +40,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">Full-Auto-Research</h1>
           <div className="flex items-center gap-4">
-            <span className="text-gray-700">Welcome, {user?.username}</span>
+            <span className="text-gray-700">Welcome, {user?.full_name || user?.email}</span>
             <button
               onClick={handleLogout}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
@@ -84,30 +84,30 @@ export default function DashboardPage() {
 
           {isLoading ? (
             <div className="p-6 text-center text-gray-500">Loading papers...</div>
-          ) : papersData?.papers.length === 0 ? (
+          ) : papersData?.items.length === 0 ? (
             <div className="p-6 text-center text-gray-500">
               No papers yet. Click "Fetch New Papers" to get started!
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {papersData?.papers.map((paper) => (
+              {papersData?.items.map((paper) => (
                 <div key={paper.id} className="p-6 hover:bg-gray-50">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     {paper.title}
                   </h3>
                   <p className="text-sm text-gray-600 mb-2">
-                    {paper.authors.join(', ')}
+                    {paper.authors}
                   </p>
                   <p className="text-sm text-gray-700 mb-3 line-clamp-3">
                     {paper.abstract}
                   </p>
                   <div className="flex gap-2 flex-wrap">
-                    {paper.categories.map((cat) => (
+                    {paper.categories.split(',').map((cat) => (
                       <span
                         key={cat}
                         className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded"
                       >
-                        {cat}
+                        {cat.trim()}
                       </span>
                     ))}
                   </div>

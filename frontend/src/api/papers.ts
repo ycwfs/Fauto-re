@@ -4,31 +4,34 @@ export interface Paper {
   id: number
   arxiv_id: string
   title: string
-  authors: string[]
-  abstract?: string
-  categories: string[]
-  published_date?: string
-  pdf_url?: string
-  fetched_at: string
+  authors: string
+  abstract: string
+  categories: string
+  published_date: string
+  pdf_url: string
+  created_at: string
 }
 
 export interface PaperListResponse {
-  papers: Paper[]
+  items: Paper[]
   total: number
   page: number
-  page_size: number
+  size: number
+  pages: number
 }
 
 export interface PaperStats {
   total_papers: number
+  papers_this_week: number
+  papers_this_month: number
   categories: Record<string, number>
 }
 
 export const papersApi = {
-  listPapers: async (page: number = 1, pageSize: number = 20, category?: string): Promise<PaperListResponse> => {
-    const params: any = { page, page_size: pageSize }
-    if (category) params.category = category
-    const response = await apiClient.get('/api/papers/', { params })
+  listPapers: async (page: number = 1, size: number = 20): Promise<PaperListResponse> => {
+    const response = await apiClient.get('/api/papers/', {
+      params: { page, size }
+    })
     return response.data
   },
 
@@ -37,13 +40,13 @@ export const papersApi = {
     return response.data
   },
 
-  fetchPapers: async (): Promise<{ message: string; task_id: string }> => {
+  fetchPapers: async (): Promise<{ status: string; task_id: string }> => {
     const response = await apiClient.post('/api/papers/fetch')
     return response.data
   },
 
   getStats: async (): Promise<PaperStats> => {
-    const response = await apiClient.get('/api/papers/stats/summary')
+    const response = await apiClient.get('/api/papers/stats')
     return response.data
   },
 }
