@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    app: full-auto-research
+    component: celery-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: full-auto-research
+      component: celery-worker
+  template:
+    metadata:
+      labels:
+        app: full-auto-research
+        component: celery-worker
+    spec:
+      containers:
+      - name: celery-worker
+        image: registry.digitalocean.com/full-auto-research/backend:latest
+        command: ["celery", "-A", "src.celery_app", "worker", "--loglevel=info"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: redis-url
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: secret-key
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: user-data
+          mountPath: /data/users
+      volumes:
+      - name: user-data
+        persistentVolumeClaim:
+          claimName: user-data-pvc
