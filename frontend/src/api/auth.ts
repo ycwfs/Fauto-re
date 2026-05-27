@@ -3,10 +3,8 @@ import apiClient from './client'
 export interface User {
   id: number
   email: string
-  username: string
-  full_name?: string
+  full_name: string
   is_active: boolean
-  is_admin: boolean
   created_at: string
 }
 
@@ -17,9 +15,8 @@ export interface LoginCredentials {
 
 export interface RegisterData {
   email: string
-  username: string
   password: string
-  full_name?: string
+  full_name: string
 }
 
 export interface TokenResponse {
@@ -29,7 +26,15 @@ export interface TokenResponse {
 
 export const authApi = {
   login: async (credentials: LoginCredentials): Promise<TokenResponse> => {
-    const response = await apiClient.post('/api/auth/login', credentials)
+    const formData = new FormData()
+    formData.append('username', credentials.email)
+    formData.append('password', credentials.password)
+
+    const response = await apiClient.post('/api/auth/login', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
     return response.data
   },
 
